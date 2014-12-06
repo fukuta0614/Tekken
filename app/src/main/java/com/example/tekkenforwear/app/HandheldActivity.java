@@ -1,6 +1,8 @@
 package com.example.tekkenforwear.app;
 
 import android.app.Activity;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -21,24 +23,24 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
 
     private GoogleApiClient mGoogleApiClient;
     private final String TAG = "handheld";
-   // private String mNode;
+    // private String mNode;
     private TextView value;
-    private MainView mMainview;
-
-    //fukuta
+    //private MainView mMainView;
+    private SoundPool mSoundPool;
+    private int mSE_PUNCH, mSE_UPPER, mSE_HOOK;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //setContentView(R.layout.activity_handheld);
-        mMainview = new MainView(this);
-        setContentView(mMainview);
+        setContentView(R.layout.activity_handheld);
+        //mMainView = new MainView(this);
+        //setContentView(mMainView);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
-//        value = (TextView)findViewById(R.id.valueLabel);
+        value = (TextView)findViewById(R.id.valueLabel);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
@@ -57,12 +59,19 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
         super.onStart();
         mGoogleApiClient.connect();
 
+        mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+//        mSoundPool = SoundPool.Builder
+        mSE_PUNCH = mSoundPool.load(getApplicationContext(), R.raw.punch, 1);
+        mSE_UPPER = mSoundPool.load(getApplicationContext(), R.raw.upper, 1);
+        mSE_HOOK = mSoundPool.load(getApplicationContext(), R.raw.hook, 1);
+
     }
 
     @Override
     protected void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
+        mSoundPool.release();
     }
 
     @Override
@@ -83,19 +92,23 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
 //        Log.d(TAG, message);
 
         if (message.equals("PUNCH")){
-            mMainview.punch();
+//            mMainView.punch();
+            mSoundPool.play(mSE_PUNCH,1.0f, 1.0f, 0, 0, 1.0f);
         }else if(message.equals("UPPER")) {
-            mMainview.upper();
+//            mMainView.upper();
+            mSoundPool.play(mSE_UPPER,1.0f, 1.0f, 0, 0, 1.0f);
         }else if(message.equals("HOOK")){
-            mMainview.hook();
+//            mMainView.hook();
+            mSoundPool.play(mSE_HOOK,1.0f, 1.0f, 0, 0, 1.0f);
         }
-//
-//        this.runOnUiThread(new Runnable() {
-//            @Override
-//            public void run() {
-////                value.setText(message);
-//            }//public void run() {
-//        });
+
+
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                value.setText(message);
+            }
+        });
 
     }
     @Override
