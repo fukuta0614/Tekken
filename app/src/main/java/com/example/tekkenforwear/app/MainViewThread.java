@@ -28,7 +28,7 @@ public class MainViewThread extends Thread{
             try{
                 _canvas = back_holder.lockCanvas(null);
                 synchronized (back_holder){
-                    back_photo.onDraw(_canvas);////////
+                    back_photo.doDraw(_canvas);////////
                 }
             }finally{
                 if(_canvas != null)

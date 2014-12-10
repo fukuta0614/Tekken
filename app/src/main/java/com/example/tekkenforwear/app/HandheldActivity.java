@@ -25,7 +25,7 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
     private final String TAG = "handheld";
     // private String mNode;
     private TextView value;
-    //private MainView mMainView;
+    private MainView mMainView;
     private SoundPool mSoundPool;
     private int mSE_PUNCH, mSE_UPPER, mSE_HOOK;
 
@@ -34,13 +34,13 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.activity_handheld);
-        //mMainView = new MainView(this);
-        //setContentView(mMainView);
+//        setContentView(R.layout.activity_handheld);
+        mMainView = new MainView(this);
+        setContentView(mMainView);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
 
-        value = (TextView)findViewById(R.id.valueLabel);
+//        value = (TextView)findViewById(R.id.valueLabel);
 
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
@@ -92,23 +92,23 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
 //        Log.d(TAG, message);
 
         if (message.equals("PUNCH")){
-//            mMainView.punch();
+            mMainView.punch();
             mSoundPool.play(mSE_PUNCH,1.0f, 1.0f, 0, 0, 1.0f);
         }else if(message.equals("UPPER")) {
-//            mMainView.upper();
+            mMainView.upper();
             mSoundPool.play(mSE_UPPER,1.0f, 1.0f, 0, 0, 1.0f);
         }else if(message.equals("HOOK")){
-//            mMainView.hook();
+            mMainView.hook();
             mSoundPool.play(mSE_HOOK,1.0f, 1.0f, 0, 0, 1.0f);
         }
 
 
-        this.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                value.setText(message);
-            }
-        });
+//        this.runOnUiThread(new Runnable() {
+//            @Override
+//            public void run() {
+//                value.setText(message);
+//            }
+//        });
 
     }
     @Override
