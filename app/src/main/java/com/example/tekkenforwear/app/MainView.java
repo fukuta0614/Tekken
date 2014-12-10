@@ -16,14 +16,16 @@ import android.widget.TextView;
 import java.util.Random;
 
 
-public class MainView extends SurfaceView implements SurfaceHolder.Callback {
+public class MainView extends SurfaceView implements SurfaceHolder.Callback,Runnable {
 
     int action_my = 0;
     int action_opponent = 0;
     int counter_r,counter_l = 0;
     boolean canRun = true;
     private final String TAG = "handheld";
-    private com.example.tekkenforwear.app.MainViewThread back_thread;
+    private SurfaceHolder mHolder;
+    private Thread mThread;
+
 
     Resources res = this.getContext().getResources();
     /*- background -*/
@@ -31,7 +33,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
     /*- character -*/
     Bitmap paul_normal = BitmapFactory.decodeResource(res, R.drawable.normal_paul);
     Bitmap jayg = BitmapFactory.decodeResource(res, R.drawable.jayg);
-    
+
     /*- energy bar-*/
     Bitmap energy_muzi8 = BitmapFactory.decodeResource(res, R.drawable.energy_l_8_8);
     Bitmap energy_muzi7 = BitmapFactory.decodeResource(res, R.drawable.energy_l_8_7);
@@ -61,9 +63,13 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
     /////constructor
     public MainView(Context context) {
         super(context);
-        getHolder().addCallback(this);
-        back_thread = new com.example.tekkenforwear.app.MainViewThread(getHolder(), this);
+        mHolder = getHolder();
+        mHolder.addCallback(this);
         mHandler.sendEmptyMessageDelayed(0, 10);
+    }
+
+    public void doDraw() {
+        Canvas canvas = mHolder.lockCanvas(null);
 
         bm = Bitmap.createScaledBitmap(bm, getWidth(), getHeight(), true);
         paul_normal = Bitmap.createScaledBitmap(paul_normal, getWidth() / 5, getHeight() / 4, true);
@@ -91,10 +97,6 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         paul_punch = Bitmap.createScaledBitmap(paul_punch, getWidth()/5, getHeight()/4, true);
         paul_hook = Bitmap.createScaledBitmap(paul_hook, getWidth()/5, getHeight()/4, true);
         paul_upper = Bitmap.createScaledBitmap(paul_upper, getWidth()/5, getHeight()/4, true);
-
-    }
-
-    public void doDraw(Canvas canvas) {
 
 /*
         int bw = bm.getWidth();  ///background width
@@ -196,6 +198,7 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
             counter_l++;
         }
 */
+        mHolder.unlockCanvasAndPost(canvas);
     }
 
 
@@ -206,22 +209,16 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
-        back_thread.setRunning(true);
-        back_thread.start();
+        mThread=new Thread(this);
+        mThread.start();
+
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
-        boolean retry = true;
-        back_thread.setRunning(false);
-        while (retry) {
-            try {
-                back_thread.join();
-                retry = false;
-            } catch (InterruptedException e) {
-            }
-        }
+        mThread = null;
     }
+
     /////////function for opponent's random attack//////////
     public void main(String[] args){
         Random generator = new Random();
@@ -238,6 +235,11 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
         }
     }
 
+    public void run(){
+        while(mThread != null){
+            doDraw();
+        }
+    }
 
     public void punch(){
         action_my = 1;
@@ -264,5 +266,4 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback {
 
 
 }
-
 
