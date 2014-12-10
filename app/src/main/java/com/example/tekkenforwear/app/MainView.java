@@ -25,6 +25,9 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback,Runn
     private final String TAG = "handheld";
     private SurfaceHolder mHolder;
     private Thread mThread;
+    private int PUNCH_DELAY = 0;
+    private int UPPER_DELAY = 0;
+    private int HOOK_DELAY = 0;
 
 
     Resources res = this.getContext().getResources();
@@ -176,15 +179,31 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback,Runn
 
         /////////////////////combat method////////////////////
         /////combat me//////
-        if (action_my== 1) {
-            canvas.drawBitmap(paul_punch,300,500,null);
-        }else if(action_my == 2) {
-            canvas.drawBitmap(paul_upper,300,500,null);
-        }else if (action_my == 3) {
-            canvas.drawBitmap(paul_hook,300,500,null);
-        }else{
-            canvas.drawBitmap(paul_normal, 300, 500, null);
+        switch(action_my) {
+            case 0:
+                canvas.drawBitmap(paul_normal, 300, 500, null);
+                break;
+            case 1:
+                if (PUNCH_DELAY == 0) {
+                    canvas.drawBitmap(paul_punch, 300, 500, null);
+                    PUNCH_DELAY = 10;
+                }
+                break;
+            case 2:
+                if (UPPER_DELAY == 0) {
+                    canvas.drawBitmap(paul_upper, 300, 500, null);
+                    UPPER_DELAY = 10;
+                }
+                break;
+            case 3:
+                if (HOOK_DELAY == 0) {
+                    canvas.drawBitmap(paul_hook, 300, 500, null);
+                    HOOK_DELAY = 10;
+                }
+                break;
         }
+
+
         /////combat opponent
 /*
         if (action_opponent == 1) {
@@ -238,6 +257,10 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback,Runn
     public void run(){
         while(mThread != null){
             doDraw();
+            if (PUNCH_DELAY > 0) PUNCH_DELAY -= -1;
+            if (UPPER_DELAY > 0)  UPPER_DELAY -= -1;
+            if (HOOK_DELAY > 0)  HOOK_DELAY -= -1;
+            if(PUNCH_DELAY==0 && UPPER_DELAY==0 && HOOK_DELAY==0) action_my=0;
         }
     }
 
