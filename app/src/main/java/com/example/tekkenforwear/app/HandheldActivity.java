@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.TextView;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -89,7 +90,7 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
     public void onMessageReceived(MessageEvent event) {
 
         final String message = event.getPath();
-//        Log.d(TAG, message);
+        Log.d(TAG, message);
 
         if (message.equals("PUNCH")){
             mMainView.punch();
@@ -128,6 +129,7 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
+
         }
 
         return super.onOptionsItemSelected(item);
