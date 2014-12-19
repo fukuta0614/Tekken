@@ -60,9 +60,9 @@ public class MainView extends SurfaceView implements SurfaceHolder.Callback,Runn
     Bitmap shield = BitmapFactory.decodeResource(res, R.drawable.shield);
 
     /////constructor
-    public MainView(Context context,Sound se_player) {
+    public MainView(Context context) {
         super(context);
-        this.se_player = se_player;
+        this.se_player = new Sound(context);
         mHolder = getHolder();
         mHolder.addCallback(this);
         mHandler.sendEmptyMessageDelayed(0, 10);

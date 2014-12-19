@@ -35,7 +35,7 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
 
 //        setContentView(R.layout.activity_handheld);
         se_player = new Sound(this);
-        mMainView = new MainView(this,se_player);
+        mMainView = new MainView(this);
         setContentView(mMainView);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
