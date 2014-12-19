@@ -27,16 +27,15 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
     // private String mNode;
     private TextView value;
     private MainView mMainView;
-    private SoundPool mSoundPool;
-    private int mSE_PUNCH, mSE_UPPER, mSE_HOOK;
-
+    private Sound se_player;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
 //        setContentView(R.layout.activity_handheld);
-        mMainView = new MainView(this);
+        se_player = new Sound(this);
+        mMainView = new MainView(this,se_player);
         setContentView(mMainView);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
@@ -60,11 +59,6 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
         super.onStart();
         mGoogleApiClient.connect();
 
-        mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-//        mSoundPool = SoundPool.Builder
-        mSE_PUNCH = mSoundPool.load(getApplicationContext(), R.raw.punch, 1);
-        mSE_UPPER = mSoundPool.load(getApplicationContext(), R.raw.upper, 1);
-        mSE_HOOK = mSoundPool.load(getApplicationContext(), R.raw.hook, 1);
 
     }
 
@@ -72,7 +66,6 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
     protected void onStop() {
         super.onStop();
         mGoogleApiClient.disconnect();
-        mSoundPool.release();
     }
 
     @Override
@@ -94,13 +87,13 @@ public class HandheldActivity extends ActionBarActivity implements GoogleApiClie
 
         if (message.equals("PUNCH")){
             mMainView.punch();
-            mSoundPool.play(mSE_PUNCH,1.0f, 1.0f, 0, 0, 1.0f);
+            se_player.play(1);
         }else if(message.equals("UPPER")) {
             mMainView.upper();
-            mSoundPool.play(mSE_UPPER,1.0f, 1.0f, 0, 0, 1.0f);
+            se_player.play(2);
         }else if(message.equals("HOOK")){
             mMainView.hook();
-            mSoundPool.play(mSE_HOOK,1.0f, 1.0f, 0, 0, 1.0f);
+            se_player.play(3);
         }
 
 
